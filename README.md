@@ -30,3 +30,11 @@ all the content is static assets, in those cases is more convenient to use
 create `remap_tar` that allows to replace the original package prefix with
 a prefix that's more suitable for your container image.
 
+## gitlab_http_archive and gitlab_http_file
+
+Similar to http_archive and http_file but aimed for downloading assets from
+private gitlab repositories by using your own private tokens or CI job
+tokens
+
+# Developing
+
