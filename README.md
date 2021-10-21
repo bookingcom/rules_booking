@@ -38,3 +38,11 @@ tokens
 
 # Developing
 
+We use [buildifier](https://github.com/bazelbuild/buildtools/blob/master/buildifier/README.md)
+to format our Bazel rules, please run:
+
+```
+bazel run @//dev:buildifier
+```
+
+Before pushing
