@@ -111,7 +111,7 @@ def _get_url(ctx):
         hostname = ctx.attr.hostname,
         project_name = _encode_path(ctx.attr.project_name),
         sha = ctx.attr.git_sha,
-        protocol = cxt.attr.protocol,
+        protocol = ctx.attr.protocol,
     )
     if ctx.attr.path:
         url = "{}&path={}".format(url, _encode_path(ctx.attr.path))
