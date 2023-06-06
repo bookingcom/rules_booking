@@ -195,7 +195,7 @@ _http_archive_attrs.update(_gitlab_attrs)
 gitlab_http_archive = repository_rule(
     implementation = _gitlab_http_archive_impl,
     attrs = _http_archive_attrs,
-    doc = """Downloads a Bazel repository stored in a gitlab repository as a compressed 
+    doc = """Downloads a Bazel repository stored in a gitlab repository as a compressed
 archive file, decompresses it, and makes its targets available for binding.
 
 It's heavily based on http_archive, so check it's documentation. It will check for netrc
@@ -238,16 +238,73 @@ def _gitlab_http_file_impl(ctx):
     netrc = read_netrc(ctx, netrc_path)
     auth = use_netrc(netrc, urls, {hostname: "Bearer <password>"})
 
-    download_info = ctx.download(
-        urls,
-        "file/" + downloaded_file_path,
-        ctx.attr.sha256,
-        ctx.attr.executable,
+    project = ctx.attr.project_name.split("/")[-1]
+    path = (ctx.attr.path or "").replace("/", "-")
+
+    download_info = ctx.download_and_extract(
+        url = urls,
+        output = "data",
+        sha256 = ctx.attr.sha256,
         canonical_id = ctx.attr.canonical_id,
         auth = auth,
+        stripPrefix = "%s-%s-%s-%s" % (project, ctx.attr.git_sha, ctx.attr.git_sha, path),
     )
+
+    directories = dict()
+    for i in ctx.execute(["find", "data", "-type", "d"]).stdout.strip().split("\n"):
+        directories[i] = 1
+
+    root = str(ctx.path("./"))
+    targets = []
+    for i in directories.keys():
+        t = ctx.path("./%s/" % i)
+        files = []
+        for j in t.readdir():
+            j = str(j).replace("%s/" % root, "")
+            if j in directories:
+                continue
+
+            if not j.endswith("/BUILD.bazel"):
+                files.append(j.split("/")[-1])
+
+        if not files:
+            continue
+
+        targets.append("//%s" % i)
+        build_file = """
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
+
+pkg_files(
+    name = "%s",
+    srcs = [ %s ],
+    visibility = ["//visibility:public"],
+    prefix = "%s",
+)
+""" % (i.split("/")[-1], ", ".join(['"%s"' % x for x in files]), i.replace("data/", ""))
+
+        ctx.file("%s/BUILD.bazel" % i, build_file)
+
+    ctx.file("data/BUILD.bazel", """
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+
+pkg_tar(
+    name = "data",
+    srcs = [ %s ],
+    visibility = ["//visibility:public"],
+    extension = ".tar.gz",
+
+)
+""" % (", ".join(['"%s"' % x for x in targets])))
+
     ctx.file("WORKSPACE", "workspace(name = \"{name}\")".format(name = ctx.name))
-    ctx.file("file/BUILD", _HTTP_FILE_BUILD.format(downloaded_file_path))
+    ctx.file("file/BUILD", """
+alias(
+    name = "file",
+    actual = "//data",
+    visibility = ["//visibility:public"],
+)
+""")
+    ctx.file("BUILD", "")
 
     return update_attrs(ctx.attr, _http_file_attrs.keys(), {"sha256": download_info.sha256})
 
