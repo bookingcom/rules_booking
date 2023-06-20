@@ -3,13 +3,12 @@ load(
     "patch",
     "read_netrc",
     "update_attrs",
-    "use_netrc",
     "workspace_and_buildfile",
 )
-load("@bazel_skylib//lib:versions.bzl", "versions")
 
 NETRC_FORMAT = """
 machine {hostname}
+    login job_token
     password {token}
 """
 
@@ -78,6 +77,20 @@ def _has_netrc(ctx):
     if not _file_exists(ctx, netrcfile):
         fail(NETRC_ERROR.format(path = netrcfile, hostname = hostname))
 
+def _add_authentication_to_url(url, token, auth_type):
+    """
+    Adds Gitlab API Authentication to an existing url
+
+    Args:
+        url: target url
+        token: token it self
+        auth_type: type of token
+    """
+    if "?" not in url:
+        url = url + "?"
+
+    return "%s&%s=%s" % (url, auth_type, token)
+
 _gitlab_attrs = {
     "project_name": attr.string(
         doc = "Gitlab project name from which to download the archive",
@@ -132,25 +145,27 @@ def _gitlab_http_archive_impl(ctx):
     if ctx.attr.build_file and ctx.attr.build_file_content:
         fail("Only one of build_file and build_file_content can be provided.")
 
-    all_urls = _get_url(ctx)
+    urls = _get_url(ctx)
     netrc = read_netrc(ctx, netrc_path)
-    auth = use_netrc(netrc, all_urls, {hostname: "Bearer <password>"})
+    token = netrc.get(hostname, {}).get("password", None)
+    login = netrc.get(hostname, {}).get("login", "private_token")
+
+    if token == None:
+        fail("No token available for %s" % hostname)
+
+    urls = [_add_authentication_to_url(x, token, login) for x in urls]
 
     download_info = ctx.download_and_extract(
-        all_urls,
+        urls,
         "",
         ctx.attr.sha256,
         "tar.gz",
         ctx.attr.strip_prefix,
         canonical_id = ctx.attr.canonical_id,
-        auth = auth,
         integrity = ctx.attr.integrity,
     )
     workspace_and_buildfile(ctx)
-    if versions.is_at_most("4.9.9", native.bazel_version):
-        patch(ctx)
-    else:
-        patch(ctx, auth = auth)
+    patch(ctx)
 
     # We don't need to override the sha256 attribute if integrity is already specified.
     sha256_override = {} if ctx.attr.integrity else {"sha256": download_info.sha256}
@@ -236,7 +251,12 @@ def _gitlab_http_file_impl(ctx):
 
     urls = _get_url(ctx)
     netrc = read_netrc(ctx, netrc_path)
-    auth = use_netrc(netrc, urls, {hostname: "Bearer <password>"})
+    token = netrc.get(hostname, {}).get("password", None)
+    login = netrc.get(hostname, {}).get("login", "private_token")
+    if token == None:
+        fail("No token available for %s" % hostname)
+
+    urls = [_add_authentication_to_url(x, token, login) for x in urls]
 
     project = ctx.attr.project_name.split("/")[-1]
     path = (ctx.attr.path or "").replace("/", "-")
@@ -246,7 +266,6 @@ def _gitlab_http_file_impl(ctx):
         output = "data",
         sha256 = ctx.attr.sha256,
         canonical_id = ctx.attr.canonical_id,
-        auth = auth,
         stripPrefix = "%s-%s-%s-%s" % (project, ctx.attr.git_sha, ctx.attr.git_sha, path),
     )
 
