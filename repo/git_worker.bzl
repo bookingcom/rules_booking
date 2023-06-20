@@ -28,6 +28,7 @@ Either commit hash, tag or branch.""",
 and resetting to the specified reference.""",
         "recursive_init_submodules": """if True, all submodules will be updated recursively
 after fetching and resetting the repo to the specified instance.""",
+        "paths": "Paths to checkout for a partial clone.",
     },
 )
 
@@ -77,6 +78,7 @@ def git_repo(ctx, directory):
         remote = str(ctx.attr.remote),
         init_submodules = ctx.attr.init_submodules,
         recursive_init_submodules = ctx.attr.recursive_init_submodules,
+        paths = ctx.attr.paths,
     )
 
     _report_progress(ctx, git_repo)
@@ -93,7 +95,7 @@ def git_repo(ctx, directory):
     actual_commit = _get_head_commit(ctx, git_repo)
     shallow_date = _get_head_date(ctx, git_repo)
 
-    return struct(commit = actual_commit, shallow_since = shallow_date)
+    return struct(commit = actual_commit, shallow_since = shallow_date, paths = ctx.attr.paths)
 
 def _report_progress(ctx, git_repo, *, shallow_failed = False):
     warning = ""
@@ -107,6 +109,7 @@ def _update(ctx, git_repo):
     init(ctx, git_repo)
     add_origin(ctx, git_repo, ctx.attr.remote)
     fetch(ctx, git_repo)
+    cone_clone(ctx, git_repo)
     reset(ctx, git_repo)
     clean(ctx, git_repo)
 
@@ -128,6 +131,8 @@ def add_origin(ctx, git_repo, remote):
 
 def fetch(ctx, git_repo):
     args = ["fetch", "origin", git_repo.fetch_ref]
+    if git_repo.paths:
+        args.extend(["--depth=1", "--filter=tree:0"])
     st = _git_maybe_shallow(ctx, git_repo, *args)
     if st.return_code == 0:
         return
@@ -150,6 +155,11 @@ def fetch(ctx, git_repo):
         )
     else:
         _error(ctx.name, ["git"] + args, st.stderr)
+
+def cone_clone(ctx, git_repo):
+    if not git_repo.paths:
+        return
+    _git(ctx, git_repo, "sparse-checkout", "set", "--no-cone", *git_repo.paths)
 
 def reset(ctx, git_repo):
     _git(ctx, git_repo, "reset", "--hard", git_repo.reset_ref)

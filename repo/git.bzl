@@ -14,7 +14,7 @@
 """Rules for cloning external git repositories."""
 
 load(
-    ":utils.bzl",
+    "@bazel_tools//tools/build_defs/repo:utils.bzl",
     "patch",
     "update_attrs",
     "workspace_and_buildfile",
@@ -42,10 +42,12 @@ def _clone_or_update_repo(ctx):
         for item in ctx.path(dest_link).readdir():
             ctx.symlink(item, root.get_child(item.basename))
 
+    out = {"commit": git_.commit}
     if ctx.attr.shallow_since:
-        return {"commit": git_.commit, "shallow_since": git_.shallow_since}
-    else:
-        return {"commit": git_.commit}
+        out["shallow_since"] = git_.shallow_since
+    if ctx.attr.paths:
+        out["paths"] = git_.paths
+    return out
 
 def _update_git_attrs(orig, keys, override):
     result = update_attrs(orig, keys, override)
@@ -166,6 +168,12 @@ _common_attrs = {
             "The content for the WORKSPACE file for this repository. " +
             "Either `workspace_file` or `workspace_file_content` can be " +
             "specified, or neither, but not both.",
+    ),
+    "paths": attr.string_list(
+        default = [],
+        doc =
+            "The paths inside the remote you want to partially clone. " +
+            "this paths should be relative to the repository root",
     ),
 }
 

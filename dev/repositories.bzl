@@ -1,5 +1,6 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+load("//repo:git.bzl", "git_repository")
 
 def io_bazel_rules_go():
     maybe(
@@ -45,8 +46,23 @@ def com_github_bazelbuild_buildtools():
         ],
     )
 
+def partial_clone_test():
+    maybe(
+        git_repository,
+        name = "partial_repository",
+        remote = "https://github.com/bookingcom/rules_booking",
+        commit = "9709f18b4dd5d0f2b776976f3b9396f8abc5dea8",
+        verbose = True,
+        strip_prefix = "dev",
+        workspace_file_content = "workspace(name = 'dev')",
+        paths = [
+            "dev",
+        ],
+    )
+
 def repositories():
     io_bazel_rules_go()
     bazel_gazelle()
     com_google_protobuf()
     com_github_bazelbuild_buildtools()
+    partial_clone_test()
