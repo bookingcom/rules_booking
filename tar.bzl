@@ -1,3 +1,7 @@
+load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+
 def remap_tar(name, tar, old_prefix, new_prefix):
     """
     Generate a new tar.gz from an existing one but change it's internal structure
@@ -29,4 +33,41 @@ def remap_tar(name, tar, old_prefix, new_prefix):
             "mv {} {}".format(old_prefix, new_prefix),  # map
             "tar -czf $$CWD/$@ `find . -type f`",  # ignore empty directories
         ]),
+    )
+
+def pkg_tar_with_structure(name, srcs = []):
+    """
+    Generate a pkg_tar target from a list of files out of a glob keeping the file structure
+
+    Args:
+        name: resulting label
+        srcs: list of files, output of glob for instance
+    """
+    dirs = {}
+
+    for x in srcs:
+        dirname = paths.dirname(x)
+        if dirname not in dirs:
+            dirs[dirname] = []
+        dirs[dirname].append(x)
+
+    labels = []
+
+    for dir, files in dirs.items():
+        if len(files) == 0:
+            continue
+
+        label = "%s-%s" % (name, dir.replace("/", "_"))
+        pkg_files(
+            name = label,
+            srcs = files,
+            prefix = dir,
+            strip_prefix = strip_prefix.from_pkg(),
+        )
+        labels.append(label)
+
+    pkg_tar(
+        name = name,
+        srcs = labels,
+        visibility = ["//visibility:public"],
     )
