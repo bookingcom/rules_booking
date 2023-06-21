@@ -24,18 +24,19 @@ def remap_tar(name, tar, old_prefix, new_prefix):
         name = name,
         srcs = [tar],
         outs = ["{}.tar.gz".format(name)],
-        cmd = "&&".join([
+        cmd = " && ".join([
+            "set -e",
             "CWD=$$(pwd)",
             "mkdir temp",
             "cd temp",
-            "tar -xzf $$CWD/$(location {})".format(tar),
+            "tar -xf $$CWD/$(location {})".format(tar),
             "mkdir -p {}".format(new_prefix.rsplit("/", 2)[0]),
             "mv {} {}".format(old_prefix, new_prefix),  # map
             "tar -czf $$CWD/$@ `find . -type f`",  # ignore empty directories
         ]),
     )
 
-def pkg_tar_with_structure(name, srcs = []):
+def pkg_tar_with_structure(name, srcs = [], **kwargs):
     """
     Generate a pkg_tar target from a list of files out of a glob keeping the file structure
 
@@ -69,5 +70,5 @@ def pkg_tar_with_structure(name, srcs = []):
     pkg_tar(
         name = name,
         srcs = labels,
-        visibility = ["//visibility:public"],
+        **kwargs
     )
