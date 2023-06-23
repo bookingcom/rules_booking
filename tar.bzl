@@ -63,7 +63,7 @@ def pkg_tar_with_structure(name, srcs = [], **kwargs):
             name = label,
             srcs = files,
             prefix = dir,
-            strip_prefix = strip_prefix.from_pkg(),
+            strip_prefix = dir,
         )
         labels.append(label)
 
