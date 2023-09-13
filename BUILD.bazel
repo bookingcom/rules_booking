@@ -1,6 +1,6 @@
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
+load(":workspace_status.bzl", "workspace_status")
 
-#load("@io_bazel_rules_go//tests:buildifier_test.bzl", "buildifier_test")
 buildifier(
     name = "buildifier",
 )
@@ -21,4 +21,8 @@ buildifier_test(
         "local",
     ],
     verbose = True,
+)
+
+workspace_status(
+    name = "workspace_status",
 )
