@@ -30,7 +30,7 @@ def remap_tar(name, tar, old_prefix, new_prefix):
             "mkdir temp",
             "cd temp",
             "tar -xf $$CWD/$(location {})".format(tar),
-            "mkdir -p {}".format(new_prefix.rsplit("/", 2)[0]),
+            "mkdir -p {}".format(new_prefix.rsplit("/", 1)[0]),
             "mv {} {}".format(old_prefix, new_prefix),  # map
             "tar -czf $$CWD/$@ `find . -type f`",  # ignore empty directories
         ]),
