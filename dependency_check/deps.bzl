@@ -12,5 +12,5 @@ def dependencies():
         urls = [
             "https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip",
         ],
-        build_file = "@//dependency_check:BUILD.dependency_check",
+        build_file = "@rules_booking//dependency_check:BUILD.dependency_check",
     )
