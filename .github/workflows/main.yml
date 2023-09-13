@@ -26,3 +26,10 @@ jobs:
             --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }}
           "${GITHUB_WORKSPACE}/bin/bazel" test //... \
             --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }}
+      - name: Archive workspace status
+        uses: actions/upload-artifact@v3
+        with:
+          name: workspace-status
+          path: |
+            bazel-out/stable-status.txt
+            bazel-out/volatile-status.txt
