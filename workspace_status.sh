@@ -10,6 +10,8 @@ git_branch=$(git rev-parse --abbrev-ref HEAD)
 git_tree_status=$(git diff-index --quiet HEAD -- && echo 'Clean' || echo 'Modified')
 
 cat << EOF
+BUILD_USER fake_user
+BUILD_HOST fake_host
 STABLE_DATE_TODAY $(date -u +%d-%m-%Y)
 REPO_URL ${repo_url}
 STABLE_REPO_URL ${repo_url}
