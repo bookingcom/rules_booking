@@ -21,4 +21,8 @@ jobs:
           chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
       - name: Build and Test
         run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" build //... && "${GITHUB_WORKSPACE}/bin/bazel" test //...
+          set -ex
+          "${GITHUB_WORKSPACE}/bin/bazel" build //... \
+            --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }}
+          "${GITHUB_WORKSPACE}/bin/bazel" test //... \
+            --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }}

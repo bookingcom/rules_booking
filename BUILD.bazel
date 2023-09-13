@@ -1,5 +1,24 @@
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
 
+#load("@io_bazel_rules_go//tests:buildifier_test.bzl", "buildifier_test")
 buildifier(
     name = "buildifier",
+)
+
+buildifier_test(
+    name = "buildifier_test",
+    size = "small",
+    srcs = glob(
+        [
+            "**/*.bazel",
+            "**/*.bzl",
+            "**/BUILD",
+            "**/BUILD.bazel",
+        ],
+    ) + ["WORKSPACE"],
+    mode = "diff",
+    tags = [
+        "local",
+    ],
+    verbose = True,
 )
