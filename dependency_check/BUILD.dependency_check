@@ -1,0 +1,17 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_import")
+
+java_import(
+    name = "libs",
+    jars = glob(["lib/**/*.jar"]),
+)
+
+java_binary(
+    name = "cli",
+    main_class = "org.owasp.dependencycheck.App",
+    visibility = [
+        "//visibility:public",
+    ],
+    runtime_deps = [
+        ":libs",
+    ],
+)

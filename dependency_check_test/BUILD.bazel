@@ -1,0 +1,36 @@
+load("//dependency_check:rules.bzl", "cache", "dependency_check")
+load("@rules_java//java:defs.bzl", "java_binary")
+
+java_binary(
+    name = "hello_world",
+    srcs = ["src/main/java/com/booking/HelloWorld.java"],
+    main_class = "com.booking.HelloWorld",
+    deps = [
+        # dependency check only checks for external dependencies
+        # so you need to have some dependencies
+        "@maven//:org_apache_logging_log4j_log4j_api",
+        "@maven//:org_apache_logging_log4j_log4j_core",
+    ],
+)
+
+cache(
+    name = "cache",
+    arguments = [
+        "--disableOssIndex",
+        "--disableCentral",
+        "--disableAssembly",  # we don't need .net assembly support
+    ],
+)
+
+dependency_check(
+    name = "dependency_check",
+    arguments = [
+        # it's best for this arguments to match the ones from the cache
+        "--disableOssIndex",
+        "--disableCentral",
+        "--disableAssembly",
+    ],
+    cache = "//dependency_check_test:cache",
+    project_key = "com.booking.HelloWorld",
+    targets = [":hello_world"],
+)
