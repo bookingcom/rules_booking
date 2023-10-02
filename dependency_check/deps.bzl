@@ -8,9 +8,9 @@ def dependencies():
         http_archive,
         name = "dependency_check",
         strip_prefix = "dependency-check",
-        sha256 = "9f2e272d270f2b23d3c29870f372acedcce9befb1c884407edab9576d1423eb1",
+        sha256 = "937a6bf8ced9d8494767082c1f588f26ea379324cb089dabb045321e8b0ab01a",
         urls = [
-            "https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip",
+            "https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip",
         ],
         build_file = "@rules_booking//dependency_check:BUILD.dependency_check",
     )
