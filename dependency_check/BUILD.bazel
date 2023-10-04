@@ -1,0 +1,8 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+# Needed in order to expose the bzl files to stardoc
+bzl_library(
+    name = "rules",
+    srcs = glob(["**/*.bzl"]),
+    visibility = ["//visibility:public"],
+)
