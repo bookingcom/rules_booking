@@ -80,9 +80,9 @@ def _dependecy_check_impl(ctx):
         return DefaultInfo()
 
     outputs = [
-        ctx.actions.declare_file("dependency-check-report.xml"),
-        ctx.actions.declare_file("dependency-check-report.html"),
-        ctx.actions.declare_file("dependency-check-report.json"),
+        ctx.actions.declare_file("%s-dependency-check-report.xml" % ctx.label.name),
+        ctx.actions.declare_file("%s-dependency-check-report.html" % ctx.label.name),
+        ctx.actions.declare_file("%s-dependency-check-report.json" % ctx.label.name),
     ]
 
     clean_cache = "%s/../clean-cache" % outputs[0].dirname
@@ -124,10 +124,14 @@ def _dependecy_check_impl(ctx):
         "set -e -o pipefail",
         "cp -Lr %s %s" % (ctx.files.cache[0].path, clean_cache),
         "chmod -R +w %s" % clean_cache,
-        "exec %s %s" % (ctx.executable._client.path, " ".join(args)),
+        "%s %s" % (ctx.executable._client.path, " ".join(args)),
+        "pushd %s" % outputs[0].dirname,
+        "mv dependency-check-report.xml %s-dependency-check-report.xml" % ctx.label.name,
+        "mv dependency-check-report.html %s-dependency-check-report.html" % ctx.label.name,
+        "mv dependency-check-report.json %s-dependency-check-report.json" % ctx.label.name,
     ]
 
-    script = ctx.actions.declare_file("script.sh")
+    script = ctx.actions.declare_file("%s-script.sh" % ctx.label.name)
 
     ctx.actions.write(
         output = script,
