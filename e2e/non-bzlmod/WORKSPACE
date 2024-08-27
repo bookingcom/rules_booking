@@ -1,0 +1,25 @@
+local_repository(
+    name = "rules_booking",
+    path = "../../",
+)
+
+load(
+    "@rules_booking//:repositories.bzl",
+    "repositories",
+)
+
+repositories()
+
+load(
+    "@rules_booking//:dependencies.bzl",
+    "dependencies",
+)
+
+dependencies()
+
+load(
+    "//dependency_check_test:repositories.bzl",
+    _dependency_check_test_deps = "dependencies",
+)
+
+_dependency_check_test_deps()

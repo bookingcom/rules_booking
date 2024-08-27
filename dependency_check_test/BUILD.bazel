@@ -1,5 +1,5 @@
+load("@rules_booking//dependency_check:rules.bzl", "cache", "dependency_check")
 load("@rules_java//java:defs.bzl", "java_binary")
-load("//dependency_check:rules.bzl", "cache", "dependency_check")
 
 java_binary(
     name = "hello_world",
@@ -8,8 +8,8 @@ java_binary(
     deps = [
         # dependency check only checks for external dependencies
         # so you need to have some dependencies
-        "@maven//:org_apache_logging_log4j_log4j_api",
-        "@maven//:org_apache_logging_log4j_log4j_core",
+        "@org_apache_logging_log4j_log4j_api//jar",
+        "@org_apache_logging_log4j_log4j_core//jar",
     ],
 )
 
@@ -19,6 +19,10 @@ cache(
         "--disableOssIndex",
         "--disableCentral",
         "--disableAssembly",  # we don't need .net assembly support
+    ],
+    tags = [
+        "no-remote-cache-upload",
+        "requires-network",
     ],
 )
 
@@ -30,7 +34,7 @@ dependency_check(
         "--disableCentral",
         "--disableAssembly",
     ],
-    cache = "//dependency_check_test:cache",
+    cache = ":cache",
     project_key = "com.booking.HelloWorld",
     targets = [":hello_world"],
 )

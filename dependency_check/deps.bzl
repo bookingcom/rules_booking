@@ -1,8 +1,6 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
-# OWASP Dependencies Check tool
-# https://jeremylong.github.io/DependencyCheck/dependency-check-cli/index.html
 def dependencies():
     maybe(
         http_archive,
