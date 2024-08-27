@@ -1,26 +1,20 @@
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load(":workspace_status.bzl", "workspace_status")
 
 buildifier(
     name = "buildifier",
+    exclude_patterns = [
+        "./.git/*",
+    ],
 )
 
-buildifier_test(
-    name = "buildifier_test",
-    size = "small",
-    srcs = glob(
-        [
-            "**/*.bazel",
-            "**/*.bzl",
-            "**/BUILD",
-            "**/BUILD.bazel",
-        ],
-    ) + ["WORKSPACE"],
-    mode = "diff",
-    tags = [
-        "local",
+buildifier(
+    name = "buildifier.check",
+    diff_command = "diff -u",
+    exclude_patterns = [
+        "./.git/*",
     ],
-    verbose = True,
+    mode = "diff",
 )
 
 workspace_status(

@@ -1,6 +1,6 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 def remap_tar(name, tar, old_prefix, new_prefix):
     """

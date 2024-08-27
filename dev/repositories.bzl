@@ -47,17 +47,6 @@ def com_google_protobuf():
         ],
     )
 
-def com_github_bazelbuild_buildtools():
-    maybe(
-        http_archive,
-        name = "com_github_bazelbuild_buildtools",
-        sha256 = "ae34c344514e08c23e90da0e2d6cb700fcd28e80c02e23e4d5715dddcb42f7b3",
-        strip_prefix = "buildtools-4.2.2",
-        urls = [
-            "https://github.com/bazelbuild/buildtools/archive/refs/tags/4.2.2.tar.gz",
-        ],
-    )
-
 def partial_clone_test():
     maybe(
         git_repository,
@@ -99,7 +88,6 @@ def repositories():
     io_bazel_rules_go()
     bazel_gazelle()
     com_google_protobuf()
-    com_github_bazelbuild_buildtools()
     partial_clone_test()
     rules_java()
     rules_jvm_external()
