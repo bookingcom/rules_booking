@@ -5,7 +5,7 @@ module(
 bazel_dep(name = "rules_booking", version = "0.0.0", dev_dependency = True)
 local_path_override(
     module_name = "rules_booking",
-    path = "../.."
+    path = "../..",
 )
 
 bazel_dep(name = "rules_pkg", version = "1.0.1")

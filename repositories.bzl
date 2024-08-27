@@ -45,6 +45,28 @@ def rules_pkg():
         sha256 = "d20c951960ed77cb7b341c2a59488534e494d5ad1d30c4818c736d57772a9fef",
     )
 
+_BAZEL_VERSION_BZL = """\
+def get_bazel_version():
+    return "{}"
+
+"""
+
+_BAZEL_VERSION_BUILD = """\
+load(":bazel_version.bzl", "get_bazel_version")
+
+exports_files(["bazel_version.bzl"])
+print("bazel_version.bzl is {}".format(get_bazel_version()))
+"""
+
+def _bazel_version_impl(repo_ctx):
+    repo_ctx.file("BUILD.bazel", _BAZEL_VERSION_BUILD)
+    repo_ctx.file("bazel_version.bzl", _BAZEL_VERSION_BZL.format(native.bazel_version))
+    repo_ctx.file("WORKSPACE", "")
+
+bazel_version = repository_rule(
+    implementation = _bazel_version_impl,
+)
+
 def repositories():
     bazel_skylib()
     rules_java()

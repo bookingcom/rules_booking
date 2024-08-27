@@ -8,6 +8,9 @@ STABLE_DATE_TODAY $(date -u +%d-%m-%Y)
 ```
 """
 
+load("@bazel_skylib//lib:versions.bzl", "versions")
+load("@bazel_version//:bazel_version.bzl", "get_bazel_version")
+
 def _cache_impl(ctx):
     """Runs dependency-check-cli to create an OWASP vulnerabilities database"""
     output = ctx.actions.declare_directory("database")
@@ -61,11 +64,16 @@ def _dependecy_check_impl(ctx):
     transitive_deps = []
 
     for t in ctx.attr.targets:
-        transitive_deps.extend(
-            [t[JavaInfo].transitive_deps] +
-            [t[JavaInfo].transitive_runtime_jars] +
-            [t[DefaultInfo].default_runfiles.files],
-        )
+        if versions.is_at_least("7.0.0", get_bazel_version()):
+            print("TODO")
+        elif versions.is_at_least("6.0.0", get_bazel_version()):
+            transitive_deps.extend(
+                [t[JavaInfo].transitive_deps] +
+                [t[JavaInfo].transitive_runtime_jars] +
+                [t[DefaultInfo].default_runfiles.files],
+            )
+        else:
+            fail("Unsupported Bazel version")
 
     transitive_deps = depset(transitive = transitive_deps).to_list()
 
