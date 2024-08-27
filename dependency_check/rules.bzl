@@ -64,16 +64,22 @@ def _dependecy_check_impl(ctx):
     transitive_deps = []
 
     for t in ctx.attr.targets:
+        javainfo = t[JavaInfo]
         if versions.is_at_least("7.0.0", get_bazel_version()):
-            print("TODO")
+            transitive_deps.append(
+                javainfo.transitive_compile_time_jars,
+            )
         elif versions.is_at_least("6.0.0", get_bazel_version()):
-            transitive_deps.extend(
-                [t[JavaInfo].transitive_deps] +
-                [t[JavaInfo].transitive_runtime_jars] +
-                [t[DefaultInfo].default_runfiles.files],
+            transitive_deps.append(
+                javainfo.transitive_deps,
             )
         else:
-            fail("Unsupported Bazel version")
+            fail("Unsupported version of Bazel")
+        transitive_deps.extend([
+            javainfo.transitive_native_libraries,
+            javainfo.transitive_runtime_jars,
+            t[DefaultInfo].default_runfiles.files,
+        ])
 
     transitive_deps = depset(transitive = transitive_deps).to_list()
 
