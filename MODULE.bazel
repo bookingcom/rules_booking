@@ -1,0 +1,9 @@
+"rules_booking dependencies"
+
+module(
+    name = "rules_booking",
+    version = "0.0.1",
+    compatibility_level = 0,
+)
+
+bazel_dep(name = "aspect_bazel_lib", version = "2.8.1", dev_dependency = True)
