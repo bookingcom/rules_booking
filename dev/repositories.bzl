@@ -61,7 +61,6 @@ def partial_clone_test():
         ],
     )
 
-
 def repositories():
     googleapis()
     io_bazel_rules_go()

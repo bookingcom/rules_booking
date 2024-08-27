@@ -63,7 +63,7 @@ def _dependecy_check_impl(ctx):
     for t in ctx.attr.targets:
         transitive_deps.extend(
             [t[JavaInfo].transitive_deps] +
-            [t[JavaInfo].transitive_runtime_deps] +
+            [t[JavaInfo].transitive_runtime_jars] +
             [t[DefaultInfo].default_runfiles.files],
         )
 
