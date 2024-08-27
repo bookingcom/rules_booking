@@ -54,7 +54,7 @@ jobs:
         bazelrc: import %workspace%/../../.aspect/bazelrc/ci.bazelrc
     - run: |
         set -ex
-        cd e2e/bazel-nonbzlmod
+        cd e2e/non-bzlmod
         export USE_BAZEL_VERSION=${{ matrix.version.version }}
         bazelisk build //...
         bazel test //...
@@ -81,7 +81,7 @@ jobs:
           import %workspace%/../../.aspect/bazelrc/ci.bazelrc
     - run: |
         set -ex
-        cd e2e/bazel-bzlmod
+        cd e2e/bzlmod
         export USE_BAZEL_VERSION=${{ matrix.version.version }}
         bazelisk build //...
         bazel test //...
