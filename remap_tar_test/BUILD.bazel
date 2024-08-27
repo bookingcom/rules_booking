@@ -1,0 +1,16 @@
+load("@rules_booking//:tar.bzl", "remap_tar")
+load("@rules_pkg//pkg:verify_archive.bzl", "verify_archive_test")
+
+remap_tar(
+    name = "remap",
+    new_prefix = "remap/tar/test",
+    old_prefix = "java/proto",
+    tar = "@rules_java_7_9_0//file",
+)
+
+verify_archive_test(
+    name = "remap-test",
+    must_contain_regex = ["^./remap/tar/test/.*"],
+    must_not_contain_regex = ["^./java/proto/.*"],
+    target = ":remap",
+)

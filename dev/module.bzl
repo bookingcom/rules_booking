@@ -15,6 +15,7 @@ def _extra_dev_dependencies_impl(ctx):
         root_module_direct_dev_deps = [
             "org_apache_logging_log4j_log4j_api",
             "org_apache_logging_log4j_log4j_core",
+            "rules_java_7_9_0",
         ],
     )
 
