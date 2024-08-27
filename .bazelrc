@@ -1,11 +1,16 @@
-build --bes_results_url=https://app.buildbuddy.io/invocation/
-build --bes_backend=grpcs://remote.buildbuddy.io
-build --remote_cache=grpcs://remote.buildbuddy.io
-build --remote_timeout=3600
+# Import Aspect bazelrc presets
+import %workspace%/.aspect/bazelrc/bazel6.bazelrc
+import %workspace%/.aspect/bazelrc/bazel7.bazelrc
+import %workspace%/.aspect/bazelrc/convenience.bazelrc
+import %workspace%/.aspect/bazelrc/correctness.bazelrc
+import %workspace%/.aspect/bazelrc/debug.bazelrc
+import %workspace%/.aspect/bazelrc/javascript.bazelrc
+import %workspace%/.aspect/bazelrc/performance.bazelrc
 
-build --workspace_status_command=$(pwd)/workspace_status.sh
+### YOUR PROJECT SPECIFIC OPTIONS GO HERE ###
 
-# cache suggestions from buildbuddy
-build --experimental_remote_cache_compression
-build --noslim_profile --experimental_profile_include_target_label --experimental_profile_include_primary_output
-build --experimental_remote_build_event_upload=all
+# Load any settings & overrides specific to the current user from `.aspect/bazelrc/user.bazelrc`.
+# This file should appear in `.gitignore` so that settings are not shared with team members. This
+# should be last statement in this config so the user configuration is able to overwrite flags from
+# this file. See https://bazel.build/configure/best-practices#bazelrc-file.
+try-import %workspace%/.aspect/bazelrc/user.bazelrc
