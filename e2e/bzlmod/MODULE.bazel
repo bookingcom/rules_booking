@@ -1,0 +1,19 @@
+module(
+    name = "rules_booking_e2e",
+)
+
+bazel_dep(name = "rules_booking", version = "0.0.0", dev_dependency = True)
+local_path_override(
+    module_name = "rules_booking",
+    path = "../.."
+)
+
+bazel_dep(name = "rules_pkg", version = "1.0.1")
+
+dependency_check_test = use_extension("@rules_booking//dev:module.bzl", "extra_dev_dependencies", dev_dependency = True)
+use_repo(
+    dependency_check_test,
+    "org_apache_logging_log4j_log4j_api",
+    "org_apache_logging_log4j_log4j_core",
+    "rules_java_7_9_0",
+)

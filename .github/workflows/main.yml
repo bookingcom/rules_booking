@@ -36,10 +36,33 @@ jobs:
   e2e-workspace-matrix:
     strategy:
       matrix:
-        version:
-          - version: 7.x
-            bazelrc: |
-              import %workspace%/../../.aspect/bazelrc/bazel7.bazelrc
+        version: [6.x, 7.x]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: bazel-contrib/setup-bazel@0.8.5
+      with:
+        # Avoid downloading Bazel every time.
+        bazelisk-cache: true
+        # Keep a disk-cache
+        disk-cache: true
+        # disable repository cache between workflows.
+        repository-cache: false
+        # disable cache for MODULE.bazel repos
+        external-cache: false
+        # enable some flags for CI
+        bazelrc: import %workspace%/../../.aspect/bazelrc/ci.bazelrc
+    - run: |
+        set -ex
+        cd e2e/bazel-nonbzlmod
+        export USE_BAZEL_VERSION=${{ matrix.version.version }}
+        bazelisk build //...
+        bazel test //...
+
+  e2e-bzlmod-matrix:
+    strategy:
+      matrix:
+        version: [6.x, 7.x]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -56,10 +79,9 @@ jobs:
         # enable some flags for CI
         bazelrc: |
           import %workspace%/../../.aspect/bazelrc/ci.bazelrc
-          ${{ matrix.version.bazelrc }}
     - run: |
         set -ex
-        cd e2e/bazel-nonbzlmod
+        cd e2e/bazel-bzlmod
         export USE_BAZEL_VERSION=${{ matrix.version.version }}
         bazelisk build //...
         bazel test //...
