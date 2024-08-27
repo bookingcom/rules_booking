@@ -5,6 +5,7 @@ This dependency is internal for rules_booking
 """
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("//:repositories.bzl", "bazel_version")
 
 def _extra_dependencies_impl(ctx):
     # OWASP Dependencies Check tool
@@ -20,9 +21,12 @@ def _extra_dependencies_impl(ctx):
         build_file = "//dependency_check:BUILD.dependency_check",
     )
 
+    bazel_version(name = "bazel_version")
+
     return ctx.extension_metadata(
         root_module_direct_deps = [
             "dependency_check",
+            "bazel_version",
         ],
         root_module_direct_dev_deps = [],
     )
