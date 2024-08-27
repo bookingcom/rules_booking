@@ -18,7 +18,7 @@ use_repo(
 bazel_dep(name = "aspect_bazel_lib", version = "2.8.1", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "7.1.2", dev_dependency = True)
 
-dependency_check_test = use_extension("//dependency_check_test:module.bzl", "extra_dev_dependencies", dev_dependency = True)
+dependency_check_test = use_extension("//dev:module.bzl", "extra_dev_dependencies", dev_dependency = True)
 use_repo(
     dependency_check_test,
     "org_apache_logging_log4j_log4j_api",

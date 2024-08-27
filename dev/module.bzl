@@ -4,7 +4,7 @@ Bazel extension module to pull extra dependencies for dependency_check_test
 This dependency is internal for rules_booking
 """
 
-load("@rules_booking//dependency_check_test:repositories.bzl", _dependencies = "dependencies")
+load(":repositories.bzl", _dependencies = "dependencies")
 
 def _extra_dev_dependencies_impl(ctx):
     _dependencies()

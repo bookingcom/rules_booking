@@ -18,8 +18,8 @@ load(
 dependencies()
 
 load(
-    "//dependency_check_test:repositories.bzl",
-    _dependency_check_test_deps = "dependencies",
+    "@rules_booking//dev:repositories.bzl",
+    _dev_dependencies = "dependencies",
 )
 
-_dependency_check_test_deps()
+_dev_dependencies()
