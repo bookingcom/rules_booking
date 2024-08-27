@@ -61,27 +61,6 @@ def partial_clone_test():
         ],
     )
 
-def rules_java():
-    maybe(
-        http_archive,
-        name = "rules_java",
-        urls = [
-            "https://github.com/bazelbuild/rules_java/releases/download/6.3.0/rules_java-6.3.0.tar.gz",
-        ],
-        sha256 = "29ba147c583aaf5d211686029842c5278e12aaea86f66bd4a9eb5e525b7f2701",
-    )
-
-def rules_jvm_external():
-    RULES_JVM_EXTERNAL_TAG = "5.3"
-    RULES_JVM_EXTERNAL_SHA = "d31e369b854322ca5098ea12c69d7175ded971435e55c18dd9dd5f29cc5249ac"
-
-    maybe(
-        http_archive,
-        name = "rules_jvm_external",
-        strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-        sha256 = RULES_JVM_EXTERNAL_SHA,
-        url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
-    )
 
 def repositories():
     googleapis()
@@ -89,5 +68,3 @@ def repositories():
     bazel_gazelle()
     com_google_protobuf()
     partial_clone_test()
-    rules_java()
-    rules_jvm_external()
