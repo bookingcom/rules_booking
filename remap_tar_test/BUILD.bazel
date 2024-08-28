@@ -1,4 +1,4 @@
-load("@rules_booking//:tar.bzl", "remap_tar")
+load("@rules_booking//booking:tar.bzl", "remap_tar")
 load("@rules_pkg//pkg:verify_archive.bzl", "verify_archive_test")
 
 remap_tar(

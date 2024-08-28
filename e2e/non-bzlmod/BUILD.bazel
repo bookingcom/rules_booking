@@ -1,0 +1,5 @@
+load("@rules_booking//booking:workspace_status.bzl", "workspace_status")
+
+workspace_status(
+    name = "workspace_status",
+)

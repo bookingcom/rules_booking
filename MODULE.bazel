@@ -10,7 +10,7 @@ bazel_dep(name = "bazel_skylib", version = "1.7.1")
 bazel_dep(name = "rules_java", version = "6.5.2")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 
-extra_dependencies = use_extension("//:module.bzl", "extra_dependencies")
+extra_dependencies = use_extension("//booking:module.bzl", "extra_dependencies")
 use_repo(
     extra_dependencies,
     "bazel_version",

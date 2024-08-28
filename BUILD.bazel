@@ -1,5 +1,5 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
-load(":workspace_status.bzl", "workspace_status")
+load("@rules_booking//booking:workspace_status.bzl", "workspace_status")
 
 buildifier(
     name = "buildifier",

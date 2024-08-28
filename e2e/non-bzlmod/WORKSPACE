@@ -4,14 +4,14 @@ local_repository(
 )
 
 load(
-    "@rules_booking//:repositories.bzl",
+    "@rules_booking//booking:repositories.bzl",
     "repositories",
 )
 
 repositories()
 
 load(
-    "@rules_booking//:dependencies.bzl",
+    "@rules_booking//booking:dependencies.bzl",
     "dependencies",
 )
 
