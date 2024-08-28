@@ -1,4 +1,4 @@
-load("@rules_booking//dependency_check:rules.bzl", "cache", "dependency_check")
+load("@rules_booking//booking/dependency_check:rules.bzl", "cache", "dependency_check")
 load("@rules_java//java:defs.bzl", "java_binary")
 
 java_binary(
