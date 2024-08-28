@@ -37,6 +37,7 @@ bazel_dep(name = "rules_booking", version = "${GITHUB_REF_NAME:1}")
 archive_override(
     module_name = "rules_booking",
     integrity = "${INTEGRITY}",
+    strip_prefix = "${PREFIX}",
     urls = [
         "${REPO_URL}/releases/download/${GITHUB_REF_NAME}/${ARCHIVE}",
     ]
