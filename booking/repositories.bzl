@@ -52,10 +52,17 @@ def get_bazel_version():
 """
 
 _BAZEL_VERSION_BUILD = """\
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load(":bazel_version.bzl", "get_bazel_version")
 
 exports_files(["bazel_version.bzl"])
 print("bazel_version.bzl is {}".format(get_bazel_version()))
+
+bzl_library(
+    name = "bazel_version",
+    srcs = ["bazel_version.bzl"],
+    visibility = ["//visibility:public"],
+)
 """
 
 def _bazel_version_impl(repo_ctx):
