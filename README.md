@@ -3,22 +3,6 @@ Some Bazel rules we have built at Booking.com
 
 # Usage
 
-Add the following lines to your `WORKSPACE`
-
-```language:python
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-GIT_SHA="<GIT_SHA>"
-
-http_archive(
-    name = "rules_booking",
-    urls = [
-        "https://github.com/bookingcom/rules_booking/archive/{}.tar.gz".format(GIT_SHA)
-    ],
-    strip_prefix = "rules_booking_{}".format(GIT_SHA)
-)
-```
-
 # Rules
 
 ## remap_tar
@@ -42,7 +26,7 @@ We use [buildifier](https://github.com/bazelbuild/buildtools/blob/master/buildif
 to format our Bazel rules, please run:
 
 ```
-bazel run @//dev:buildifier
+bazel run @//dev:buildifier && bazel run //:gazelle
 ```
 
 Before pushing
