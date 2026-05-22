@@ -21,3 +21,5 @@ use_repo(
     dev_dependencies,
     "rules_java_7_9_0",
 )
+
+bazel_dep(name = "aspect_gazelle_prebuilt", version = "0.0.11", dev_dependency = True)
