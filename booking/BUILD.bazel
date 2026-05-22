@@ -13,8 +13,7 @@ bzl_library(
     visibility = ["//visibility:public"],
     deps = [
         "@bazel_skylib//lib:paths",
-        "@rules_pkg//pkg:mappings",
-        "@rules_pkg//pkg:tar",
+        "@rules_pkg//pkg:bzl_srcs",  # keep
     ],
 )
 
