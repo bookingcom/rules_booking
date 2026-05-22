@@ -1,5 +1,14 @@
+load("@aspect_gazelle_prebuilt//:def.bzl", "aspect_gazelle")
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@rules_booking//booking:workspace_status.bzl", "workspace_status")
+
+aspect_gazelle(
+    name = "gazelle",
+    languages = [
+        "starlark",
+        "visibility_extension",
+    ],
+)
 
 buildifier(
     name = "buildifier",
