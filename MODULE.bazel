@@ -3,27 +3,21 @@
 module(
     name = "rules_booking",
     version = "0.0.1",
-    compatibility_level = 0,
 )
 
-bazel_dep(name = "bazel_skylib", version = "1.7.1")
-bazel_dep(name = "rules_java", version = "6.5.2")
-bazel_dep(name = "rules_pkg", version = "1.0.1")
+bazel_dep(name = "bazel_skylib", version = "1.9.0")
+bazel_dep(name = "rules_pkg", version = "1.2.0")
 
 extra_dependencies = use_extension("//booking:module.bzl", "extra_dependencies")
 use_repo(
     extra_dependencies,
     "bazel_version",
-    "dependency_check",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.8.1", dev_dependency = True)
-bazel_dep(name = "buildifier_prebuilt", version = "7.1.2", dev_dependency = True)
+bazel_dep(name = "buildifier_prebuilt", version = "8.5.1.2", dev_dependency = True)
 
-dependency_check_test = use_extension("//dev:module.bzl", "extra_dev_dependencies", dev_dependency = True)
+dev_dependencies = use_extension("//dev:module.bzl", "extra_dev_dependencies", dev_dependency = True)
 use_repo(
-    dependency_check_test,
-    "org_apache_logging_log4j_log4j_api",
-    "org_apache_logging_log4j_log4j_core",
+    dev_dependencies,
     "rules_java_7_9_0",
 )

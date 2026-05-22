@@ -1,5 +1,5 @@
 bazel-*
 .idea
-MODULE.bazel.lock
 .bazelbsp
 projectview.bazelproject
+bazelrc.user

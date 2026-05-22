@@ -20,68 +20,30 @@ jobs:
     - uses: actions/checkout@v4
     - uses: bazel-contrib/setup-bazel@0.8.5
       with:
-        # Avoid downloading Bazel every time.
-        bazelisk-cache: true
-        # Keep a disk-cache
-        disk-cache: true
-        # disable repository cache between workflows.
+        # we don't release often to make use of caches
+        bazelisk-cache: false
+        disk-cache: false
         repository-cache: false
-        # enable some flags for CI
-        bazelrc: |
-          import %workspace%/.aspect/bazelrc/ci.bazelrc
-        # disable cache for MODULE.bazel repos
         external-cache: false
     - run: bazelisk build //... && bazelisk test //...
-
-  e2e-workspace-matrix:
-    strategy:
-      matrix:
-        version: [6.x, 7.x]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: bazel-contrib/setup-bazel@0.8.5
-      with:
-        # Avoid downloading Bazel every time.
-        bazelisk-cache: true
-        # Keep a disk-cache
-        disk-cache: true
-        # disable repository cache between workflows.
-        repository-cache: false
-        # disable cache for MODULE.bazel repos
-        external-cache: false
-        # enable some flags for CI
-        bazelrc: import %workspace%/../../.aspect/bazelrc/ci.bazelrc
-    - run: |
-        set -ex
-        cd e2e/non-bzlmod
-        export USE_BAZEL_VERSION=${{ matrix.version.version }}
-        bazelisk build //...
-        bazel test //...
 
   e2e-bzlmod-matrix:
     strategy:
       matrix:
-        version: [6.x, 7.x]
+        version: [7.x, 8.x, 9.x]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: bazel-contrib/setup-bazel@0.8.5
       with:
-        # Avoid downloading Bazel every time.
-        bazelisk-cache: true
-        # Keep a disk-cache
-        disk-cache: true
-        # disable repository cache between workflows.
+        # we don't release often to make use of caches
+        bazelisk-cache: false
+        disk-cache: false
         repository-cache: false
-        # disable cache for MODULE.bazel repos
         external-cache: false
-        # enable some flags for CI
-        bazelrc: |
-          import %workspace%/../../.aspect/bazelrc/ci.bazelrc
     - run: |
         set -ex
         cd e2e/bzlmod
         export USE_BAZEL_VERSION=${{ matrix.version.version }}
         bazelisk build //...
-        bazel test //...
+        bazelisk test //...
