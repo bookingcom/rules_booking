@@ -25,7 +25,9 @@ jobs:
         disk-cache: false
         repository-cache: false
         external-cache: false
-    - run: bazelisk build //... && bazelisk test //...
+    - run: |
+        bazelisk build //... && bazelisk test //...
+        bazelisk run //:gazelle && git status --porcelain
 
   e2e-bzlmod-matrix:
     strategy:

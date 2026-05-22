@@ -8,12 +8,6 @@ module(
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
 
-extra_dependencies = use_extension("//booking:module.bzl", "extra_dependencies")
-use_repo(
-    extra_dependencies,
-    "bazel_version",
-)
-
 bazel_dep(name = "buildifier_prebuilt", version = "8.5.1.2", dev_dependency = True)
 
 dev_dependencies = use_extension("//dev:module.bzl", "extra_dev_dependencies", dev_dependency = True)
