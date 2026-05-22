@@ -197,29 +197,6 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
-    "//booking:module.bzl%extra_dependencies": {
-      "general": {
-        "bzlTransitiveDigest": "FZr3boZhtFTQJWBb7AkEgAm0bzdDkZyPzef8ZaTRWCw=",
-        "usagesDigest": "04ifm718C7C82E4z943npFTUS+r/Jam5iNqaBadpQHc=",
-        "recordedInputs": [
-          "REPO_MAPPING:,bazel_tools bazel_tools"
-        ],
-        "generatedRepoSpecs": {
-          "bazel_version": {
-            "repoRuleId": "@@//booking:repositories.bzl%bazel_version",
-            "attributes": {}
-          }
-        },
-        "moduleExtensionMetadata": {
-          "explicitRootModuleDirectDeps": [
-            "bazel_version"
-          ],
-          "explicitRootModuleDirectDevDeps": [],
-          "useAllRepos": "NO",
-          "reproducible": false
-        }
-      }
-    },
     "//dev:module.bzl%extra_dev_dependencies": {
       "general": {
         "bzlTransitiveDigest": "Q6JF9Dg+jUU6CV6qX2Y7cV5PpiR5r3MuFI3QpsWuYRQ=",
