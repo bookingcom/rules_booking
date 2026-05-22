@@ -26,6 +26,7 @@ jobs:
         repository-cache: false
         external-cache: false
     - run: |
+        set -ex
         bazelisk build //... && bazelisk test //...
         bazelisk run //:gazelle && git status --porcelain
 
